@@ -1,0 +1,13 @@
+bot:
+  token: 5849738234:AAH1gIts1tuSOmtA43XBYuTZVSpnAI6iMkk
+  name: spring_test123456789_bot
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pdfbot
+    username: postgres
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+  main:
+    allow-circular-references: true
