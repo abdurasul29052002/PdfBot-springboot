@@ -42,15 +42,12 @@ public class PDFService {
     }
 
     @SneakyThrows
-    public void generate(List<String> paths, Long chatId) {
-        for (int i = 0; i < paths.size(); i++) {
-            downloadPhotos(chatId, paths.get(i), i);
-        }
+    public void generate(Long chatId, Integer size) {
         Document document = new Document();
         PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(pdfFolder + "/" + chatId + ".pdf"));
         document.open();
-        document.setPageCount(paths.size());
-        for (int i = 0; i < paths.size(); i++) {
+        document.setPageCount(size);
+        for (int i = 0; i < size; i++) {
             Image image = Image.getInstance(imageFolder + "/" + chatId + "_" + i + ".jpg");
             image.scaleToFit(new Rectangle(image.getWidth(), image.getHeight()));
             image.setAbsolutePosition(0, 0);

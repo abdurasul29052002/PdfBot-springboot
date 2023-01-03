@@ -49,7 +49,7 @@ public class UpdateController extends TelegramLongPollingBot {
             } else if (message.hasPhoto()) {
                 userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
             } else if (message.hasDocument()) {
-                //TODO: Documentni qilish kerak
+                userService.userPanel(message.getDocument(),sendMessage, message.getMessageId());
             }
         } else if (update.hasCallbackQuery()) {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();

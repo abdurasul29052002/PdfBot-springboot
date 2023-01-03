@@ -31,8 +31,7 @@ public class UserService {
     private final MessageService messageService;
     private final PDFService pdfService;
     private final Sender sender;
-    private final Map<Long, List<List<PhotoSize>>> photoMap = new HashMap<>();
-    private final Map<Long, List<Document>> documentMap = new HashMap<>();
+    private final Map<Long, Integer> userPhotosCount = new HashMap<>();
     public static org.telegram.telegrambots.meta.api.objects.User currentUser;
 
     @SneakyThrows
@@ -43,6 +42,9 @@ public class UserService {
             switch (text) {
                 case "PDF yaratish \uD83D\uDCD5", "Generate PDF \uD83D\uDCD5", "Генерировать PDF \uD83D\uDCD5" -> {
                     messageService.getAskPhotoMessage(sendMessage, user.getLanguageUser());
+                    userPhotosCount.put(chatId, 0);
+                    user.setBotState(BotState.GETPHOTO);
+                    userRepository.save(user);
                 }
                 case "Generate\uD83D\uDCD5", "Yaratish\uD83D\uDCD5", "Генерировать\uD83D\uDCD5" -> {
                     SendMessage stickerMessage = new SendMessage(chatId.toString(), "\uD83D\uDCDD");
@@ -51,18 +53,19 @@ public class UserService {
                     sendChatAction.setAction(ActionType.UPLOADDOCUMENT);
                     sendChatAction.setChatId(chatId);
                     sender.execute(sendChatAction);
-                    List<String> filePaths = getFilePaths(chatId);
-                    pdfService.generate(filePaths, chatId);
+                    pdfService.generate(chatId, userPhotosCount.get(chatId));
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(chatId);
                     InputFile inputFile = pdfService.getPdfFile(chatId);
                     sendDocument.setDocument(inputFile);
-                    messageService.getReadyPdfMessage(sendDocument,user.getLanguageUser());
+                    messageService.getReadyPdfMessage(sendDocument, user.getLanguageUser());
                     sender.execute(sendDocument);
-                    pdfService.deleteFiles(chatId, photoMap.get(chatId).size());
-                    photoMap.remove(chatId); documentMap.remove(chatId);
-                    System.out.println(chatId+": Successfully generated a pdf file");
+                    pdfService.deleteFiles(chatId, userPhotosCount.get(chatId));
+                    userPhotosCount.remove(chatId);
+                    System.out.println(chatId + ": Successfully generated a pdf file");
                     countPdf++;
+                    user.setBotState(BotState.START);
+                    userRepository.save(user);
                     return;
                 }
                 default -> {
@@ -75,7 +78,8 @@ public class UserService {
                     currentUser.getUserName(),
                     chatId,
                     BotState.GETLANG,
-                    null
+                    null,
+                    true
             );
             userRepository.save(user);
             countUsers++;
@@ -100,32 +104,42 @@ public class UserService {
                 user.setLanguageUser(Language.RUS);
             }
         }
-        user.setBotState(BotState.GETPHOTO);
+        user.setBotState(BotState.START);
         messageService.getGreetingMessage(sendMessage, user);
         userRepository.save(user);
         sender.sendMessage(sendMessage);
     }
 
-    public void userPanel(List<PhotoSize> photo, SendMessage sendMessage, Integer messageId) {
+    @SneakyThrows
+    public void userPanel(List<PhotoSize> photos, SendMessage sendMessage, Integer messageId) {
         Long chatId = Long.valueOf(sendMessage.getChatId());
         User user = userRepository.findByUserId(chatId).orElseThrow();
-        if (!photoMap.containsKey(chatId)) {
-            photoMap.put(chatId, new ArrayList<>());
+        if (user.getBotState().equals(BotState.GETPHOTO)){
+            GetFile getFile = new GetFile(photos.get(photos.size()-1).getFileId());
+            File executedFile = sender.execute(getFile);
+            pdfService.downloadPhotos(chatId, executedFile.getFilePath(), userPhotosCount.get(chatId));
+            userPhotosCount.put(chatId,userPhotosCount.get(chatId)+1);
+            messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
+            sender.sendMessage(sendMessage);
+        }else {
+            messageService.getErrorStateMessage(sendMessage,user.getLanguageUser());
         }
-        photoMap.get(chatId).add(photo);
-        messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
-        sender.sendMessage(sendMessage);
     }
 
     @SneakyThrows
-    public List<String> getFilePaths(Long chatId) {
-        List<List<PhotoSize>> lists = photoMap.get(chatId);
-        List<String> filePaths = new ArrayList<>();
-        for (List<PhotoSize> list : lists) {
-            GetFile getFile = new GetFile(list.get(list.size() - 1).getFileId());
+    public void userPanel(Document document, SendMessage sendMessage, Integer messageId) {
+        Long chatId = Long.valueOf(sendMessage.getChatId());
+        User user = userRepository.findByUserId(chatId).orElseThrow();
+        System.out.println(document.getFileName());
+        if (document.getFileName().endsWith(".jpg") || document.getFileName().endsWith(".png")) {
+            GetFile getFile = new GetFile(document.getFileId());
             File executedFile = sender.execute(getFile);
-            filePaths.add(executedFile.getFilePath());
+            pdfService.downloadPhotos(chatId, executedFile.getFilePath(), userPhotosCount.get(chatId));
+            userPhotosCount.put(chatId, userPhotosCount.get(chatId)+1);
+            messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
+            sender.sendMessage(sendMessage);
+        }else {
+            messageService.getErrorFileTypeMessage(sendMessage, user.getLanguageUser());
         }
-        return filePaths;
     }
 }

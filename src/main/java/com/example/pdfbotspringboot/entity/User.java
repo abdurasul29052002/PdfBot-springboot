@@ -28,4 +28,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "language_user")
     private Language languageUser;
+
+    private Boolean active = true;
 }
