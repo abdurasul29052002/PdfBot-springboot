@@ -1,26 +1,14 @@
 package com.example.pdfbotspringboot.controller;
 
+import com.example.pdfbotspringboot.component.Sender;
 import com.example.pdfbotspringboot.config.BotConfig;
 import com.example.pdfbotspringboot.service.AdminService;
-import com.example.pdfbotspringboot.service.MessageService;
 import com.example.pdfbotspringboot.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Document;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.telegram.telegrambots.meta.api.objects.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +17,8 @@ public class UpdateController extends TelegramLongPollingBot {
     private final BotConfig botConfig;
     private final AdminService adminService;
     private final UserService userService;
-    private SendMessage sendMessage = new SendMessage();
+    private final Sender sender;
+
 
 
     @Override
@@ -44,41 +33,34 @@ public class UpdateController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableHtml(true);
+        if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
             sendMessage.setChatId(chatId);
+            UserService.currentUser = message.getFrom();
             if (message.hasText()) {
                 if (chatId == 1324394249) {
-                    sendMessage(adminService.adminPanel(message));
+                    adminService.adminPanel(message.getText(), sendMessage);
                 } else {
-                    sendMessage(userService.userPanel(message));
+                    userService.userPanel(message.getText(), sendMessage);
                 }
             } else if (message.hasPhoto()) {
-                sendMessage(userService.replyToPhotoMessage(message));
+                userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
             } else if (message.hasDocument()) {
-
+                //TODO: Documentni qilish kerak
             }
         } else if (update.hasCallbackQuery()) {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
-            if (chatId == 1324394249){
+            sendMessage.setChatId(chatId);
+            if (chatId == 1324394249) {
 
-            }else {
-                sendMessage(userService.userPanel(update.getCallbackQuery()));
+            } else {
+                userService.userPanel(update.getCallbackQuery(), sendMessage);
             }
-        } else if (update.getMessage().hasDocument()) {
-            System.out.println("file bor");
-            Document document = update.getMessage().getDocument();
-            System.out.println(document.getFileId());
         }
     }
 
-    private boolean sendMessage(SendMessage sendMessage){
-        try {
-            execute(sendMessage);
-            return true;
-        } catch (TelegramApiException e) {
-            return false;
-        }
-    }
+
 }
