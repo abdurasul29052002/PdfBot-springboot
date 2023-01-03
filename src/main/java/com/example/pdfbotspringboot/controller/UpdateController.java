@@ -41,7 +41,7 @@ public class UpdateController extends TelegramLongPollingBot {
             sendMessage.setChatId(chatId);
             UserService.currentUser = message.getFrom();
             if (message.hasText()) {
-                if (chatId == 1324394249) {
+                if (chatId == 1324394249 || chatId == 968877318) {
                     adminService.adminPanel(message.getText(), sendMessage);
                 } else {
                     userService.userPanel(message.getText(), sendMessage);

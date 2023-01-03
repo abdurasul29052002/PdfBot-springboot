@@ -49,6 +49,7 @@ public class AdminService {
             default -> {
                 declareMessage = text;
                 getThread().start();
+                sendMessage.setText("Habaringiz barcha foydalanuvchilarga tez orada jo`natiladi");
             }
         }
         sender.sendMessage(sendMessage);
