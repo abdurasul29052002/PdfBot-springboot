@@ -1,6 +1,6 @@
 bot:
-  token: 5849738234:AAH1gIts1tuSOmtA43XBYuTZVSpnAI6iMkk
-  name: spring_test123456789_bot
+  token: 5039461659:AAFe3YLo6bbGQntb6VtZukV7QJU9XuyvnNk
+  name: pdfdocsbot
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pdfbot
