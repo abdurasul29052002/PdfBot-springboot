@@ -41,7 +41,7 @@ public class AdminService {
                 sendMessage.setText("Jo`natmoqchi bo`lgan habarni kiriting");
             }
             case "Foydalanuvchilar soni" -> {
-                sendMessage.setText(String.valueOf(userRepository.count()));
+                sendMessage.setText("Barcha foydalanuvchilar: "+userRepository.count()+"\n<b>Active:</b> "+userRepository.countAllByActive(true)+"\n<b>Blocked:</b> "+userRepository.countAllByActive(false));
             }
             case "Statistika" -> {
                 sendMessage.setText("<b>Bugun kun bo`yicha</b>\nPDF\uD83D\uDCD5: "+ countPdf + "\nYangi obunachilar: " + countUsers);
@@ -65,9 +65,12 @@ public class AdminService {
                 declareSender.setText(declareMessage);
                 if (sender.sendMessage(declareSender)) {
                     success++;
+                    user.setActive(true);
                 } else {
                     fail++;
+                    user.setActive(false);
                 }
+                userRepository.save(user);
                 int count = success + fail;
                 if (count % 100 == 0 || count == users.size()) {
                     declareSender.setText(count + " ta habar jo`natildi\nSuccess✅: " + success + "\nFail❌: " + fail);

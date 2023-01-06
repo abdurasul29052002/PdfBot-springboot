@@ -33,8 +33,8 @@ public class PDFService {
 
     private final BotConfig botConfig;
     private StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
-    public static final String pdfFolder = "C:\\Users\\Abdurasul\\Desktop\\pdf";
-    public static final String imageFolder = "C:\\Users\\Abdurasul\\Desktop\\images";
+    public static final String pdfFolder = "/home/ubuntu/files/pdf";
+    public static final String imageFolder = "/home/ubuntu/files/images";
 
     @PostConstruct
     public void init() {

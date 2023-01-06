@@ -9,4 +9,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUserId(Long userId);
 
     Optional<User> findByUserId(Long userId);
+    Integer countAllByActive(Boolean active);
 }
