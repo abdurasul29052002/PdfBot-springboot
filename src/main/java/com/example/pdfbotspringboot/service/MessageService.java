@@ -34,23 +34,29 @@ public class MessageService {
         switch (language){
             case ENGLISH -> {
                 sendMessage.setText("<b>Hi</b> , This bot helps you for media processing that can work with pdf documents\n\n" +
-                        "You can get more information with /help\n\nYou can easily make a pdf with this bot so press button <b>PDF Generator</b>");
+                        "You can get more information with /help\n\nYou can easily make a pdf with this bot so press button <b>PDF Generator</b>\n"+
+                        "You can easily compress files with press <b>Compress images</b> button"
+                );
                 sendMessage.setReplyMarkup(keyboardService.getReplyKeyboard(
-                        1,"Generate PDF \uD83D\uDCD5"
+                        2,"Generate PDF \uD83D\uDCD5", "Compress files"
                 ));
             }
             case RUS -> {
                 sendMessage.setText("<b>Привет</b>, этот бот поможет тебе в нескольких шагах " +
-                        "Вы можете узнать больше через /help\n\nОтправьте нужные изображения, нажав кнопку Генератор PDF.");
+                        "Вы можете узнать больше через /help\n\nОтправьте нужные изображения, нажав кнопку Генератор PDF.\n" +
+                        "Вы можете сжат файлы с кнопкой <b>Сжат файлы</b>"
+                );
                 sendMessage.setReplyMarkup(keyboardService.getReplyKeyboard(
-                        1,"Генерировать PDF \uD83D\uDCD5"
+                        2,"Генерировать PDF \uD83D\uDCD5", "Сжат файлы"
                 ));
             }
             case UZBEK ->{
                 sendMessage.setText("<b>Salom</b> , bu bot sizga bir nechta amallarni bajarishda yordam beradi\n\n/help buyrug'ini bosish orqali qo'shimcha ma'lumot olishingiz mumkin\n\n" +
-                        "<b>PDF yaratish</b> tugmasi orqali siz rasmlarni osongina pdf file ko'rinishiga keltira olasiz");
+                        "<b>PDF yaratish</b> tugmasi orqali siz rasmlarni osongina pdf file ko'rinishiga keltira olasiz\n"+
+                        "<b>Fayllarni zip qilish</b> tugmasi orqali faylani osongina zip qilishingiz mumkin bo`ladi"
+                );
                 sendMessage.setReplyMarkup(keyboardService.getReplyKeyboard(
-                        1,"PDF yaratish \uD83D\uDCD5"
+                        2,"PDF yaratish \uD83D\uDCD5", "Fayllarni zip qilish"
                 ));
             }
         }
