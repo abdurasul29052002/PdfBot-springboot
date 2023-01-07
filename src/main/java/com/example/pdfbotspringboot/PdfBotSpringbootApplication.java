@@ -13,10 +13,10 @@ import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +26,12 @@ public class PdfBotSpringbootApplication {
 
     public static Integer countUsers = 0;
     public static Integer countPdf = 0;
+    public static Integer countZips = 0;
     public static final long dayInMilliseconds = 1000*60*60*24;
+    public static final String imageFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\images";
+    public static final String pdfFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\pdf";
+    public static final String compressFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\compress";
+    public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
 
     public static void main(String[] args) {
         SpringApplication.run(PdfBotSpringbootApplication.class, args);
@@ -36,9 +41,11 @@ public class PdfBotSpringbootApplication {
             public void run() {
                 countPdf = 0;
                 countUsers = 0;
+                countZips = 0;
                 System.out.println("Timer ishladi " + LocalDateTime.now());
             }
-        },new Date(),dayInMilliseconds);
+        },Date.valueOf(LocalDate.of(2023,1,8)),dayInMilliseconds);
+
     }
 
     @Bean

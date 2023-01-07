@@ -30,6 +30,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final MessageService messageService;
     private final PDFService pdfService;
+    private final ZipService zipService;
+    private final KeyboardService keyboardService;
     private final Sender sender;
     private final Map<Long, Integer> userPhotosCount = new HashMap<>();
     public static org.telegram.telegrambots.meta.api.objects.User currentUser;
@@ -47,7 +49,8 @@ public class UserService {
                     userRepository.save(user);
                 }
                 case "Generate\uD83D\uDCD5", "Yaratish\uD83D\uDCD5", "Генерировать\uD83D\uDCD5" -> {
-                    SendMessage stickerMessage = new SendMessage(chatId.toString(), "\uD83D\uDCDD");
+                    SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDD");
+                    stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
                     sender.execute(stickerMessage);
                     SendChatAction sendChatAction = new SendChatAction();
                     sendChatAction.setAction(ActionType.UPLOADDOCUMENT);
@@ -58,7 +61,7 @@ public class UserService {
                     sendDocument.setChatId(chatId);
                     InputFile inputFile = pdfService.getPdfFile(chatId);
                     sendDocument.setDocument(inputFile);
-                    messageService.getReadyPdfMessage(sendDocument, user.getLanguageUser());
+                    messageService.getReadyFileMessage(sendDocument, user.getLanguageUser());
                     sender.execute(sendDocument);
                     pdfService.deleteFiles(chatId, userPhotosCount.get(chatId));
                     userPhotosCount.remove(chatId);
@@ -66,6 +69,33 @@ public class UserService {
                     countPdf++;
                     user.setBotState(BotState.START);
                     userRepository.save(user);
+                    return;
+                }
+                case "Compress files\uD83D\uDCDA", "Сжат файлы\uD83D\uDCDA", "Fayllarni zip qilish\uD83D\uDCDA" -> {
+                    messageService.getAskDocumentForCompress(sendMessage, user.getLanguageUser());
+                    user.setBotState(BotState.GET_DOCUMENT);
+                    userRepository.save(user);
+                }
+                case "Compress\uD83D\uDCDA", "Сжат\uD83D\uDCDA", "Zip\uD83D\uDCDA" -> {
+                    SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDA");
+                    stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
+                    sender.execute(stickerMessage);
+                    SendChatAction sendChatAction = new SendChatAction();
+                    sendChatAction.setAction(ActionType.UPLOADDOCUMENT);
+                    sendChatAction.setChatId(chatId);
+                    sender.execute(sendChatAction);
+                    zipService.zip(chatId);
+                    SendDocument sendDocument = new SendDocument();
+                    sendDocument.setChatId(chatId);
+                    InputFile zip = zipService.getZip(chatId);
+                    sendDocument.setDocument(zip);
+                    messageService.getReadyFileMessage(sendDocument, user.getLanguageUser());
+                    sender.execute(sendDocument);
+                    zipService.deleteFiles(chatId);
+                    user.setBotState(BotState.START);
+                    userRepository.save(user);
+                    System.out.println(chatId+": Successfully compressed ZIP file");
+                    countZips++;
                     return;
                 }
                 default -> {
@@ -94,13 +124,13 @@ public class UserService {
         sendMessage.setChatId(chatId);
         User user = userRepository.findByUserId(chatId).orElseThrow();
         switch (callBackData) {
-            case "ENGLISH" -> {
+            case "English" -> {
                 user.setLanguageUser(Language.ENGLISH);
             }
-            case "UZBEK" -> {
+            case "O`zbekcha" -> {
                 user.setLanguageUser(Language.UZBEK);
             }
-            case "RUS" -> {
+            case "Русский" -> {
                 user.setLanguageUser(Language.RUS);
             }
         }
@@ -130,16 +160,23 @@ public class UserService {
     public void userPanel(Document document, SendMessage sendMessage, Integer messageId) {
         Long chatId = Long.valueOf(sendMessage.getChatId());
         User user = userRepository.findByUserId(chatId).orElseThrow();
-        System.out.println(document.getFileName());
-        if (document.getFileName().endsWith(".jpg") || document.getFileName().endsWith(".png")) {
+        if (user.getBotState().equals(BotState.GET_PHOTO)) {
+            if (document.getFileName().endsWith(".jpg") || document.getFileName().endsWith(".png")) {
+                GetFile getFile = new GetFile(document.getFileId());
+                File executedFile = sender.execute(getFile);
+                pdfService.downloadPhotos(chatId, executedFile.getFilePath(), userPhotosCount.get(chatId));
+                userPhotosCount.put(chatId, userPhotosCount.get(chatId)+1);
+                messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
+                sender.sendMessage(sendMessage);
+            }else {
+                messageService.getErrorFileTypeMessage(sendMessage, user.getLanguageUser());
+            }
+        }else if (user.getBotState().equals(BotState.GET_DOCUMENT)){
             GetFile getFile = new GetFile(document.getFileId());
             File executedFile = sender.execute(getFile);
-            pdfService.downloadPhotos(chatId, executedFile.getFilePath(), userPhotosCount.get(chatId));
-            userPhotosCount.put(chatId, userPhotosCount.get(chatId)+1);
-            messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
+            zipService.downloadFiles(chatId, executedFile.getFilePath(), document.getFileName());
+            messageService.getReplyToDocument(sendMessage, user.getLanguageUser(), messageId);
             sender.sendMessage(sendMessage);
-        }else {
-            messageService.getErrorFileTypeMessage(sendMessage, user.getLanguageUser());
         }
     }
 }
