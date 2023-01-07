@@ -43,7 +43,7 @@ public class UserService {
                 case "PDF yaratish \uD83D\uDCD5", "Generate PDF \uD83D\uDCD5", "Генерировать PDF \uD83D\uDCD5" -> {
                     messageService.getAskPhotoMessage(sendMessage, user.getLanguageUser());
                     userPhotosCount.put(chatId, 0);
-                    user.setBotState(BotState.GETPHOTO);
+                    user.setBotState(BotState.GET_PHOTO);
                     userRepository.save(user);
                 }
                 case "Generate\uD83D\uDCD5", "Yaratish\uD83D\uDCD5", "Генерировать\uD83D\uDCD5" -> {
@@ -77,7 +77,7 @@ public class UserService {
                     null,
                     currentUser.getUserName(),
                     chatId,
-                    BotState.GETLANG,
+                    BotState.GET_LANG,
                     null,
                     true
             );
@@ -114,7 +114,7 @@ public class UserService {
     public void userPanel(List<PhotoSize> photos, SendMessage sendMessage, Integer messageId) {
         Long chatId = Long.valueOf(sendMessage.getChatId());
         User user = userRepository.findByUserId(chatId).orElseThrow();
-        if (user.getBotState().equals(BotState.GETPHOTO)){
+        if (user.getBotState().equals(BotState.GET_PHOTO)){
             GetFile getFile = new GetFile(photos.get(photos.size()-1).getFileId());
             File executedFile = sender.execute(getFile);
             pdfService.downloadPhotos(chatId, executedFile.getFilePath(), userPhotosCount.get(chatId));
