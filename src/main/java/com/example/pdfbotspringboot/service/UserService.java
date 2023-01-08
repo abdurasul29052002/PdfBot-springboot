@@ -151,6 +151,7 @@ public class UserService {
             userPhotosCount.put(chatId,userPhotosCount.get(chatId)+1);
             messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
             sender.sendMessage(sendMessage);
+            Thread.sleep(1000);
         }else {
             messageService.getErrorStateMessage(sendMessage,user.getLanguageUser());
         }
@@ -168,6 +169,7 @@ public class UserService {
                 userPhotosCount.put(chatId, userPhotosCount.get(chatId)+1);
                 messageService.getReplyToPhotoMessage(sendMessage, user.getLanguageUser(), messageId);
                 sender.sendMessage(sendMessage);
+                Thread.sleep(1000);
             }else {
                 messageService.getErrorFileTypeMessage(sendMessage, user.getLanguageUser());
             }
@@ -177,6 +179,7 @@ public class UserService {
             zipService.downloadFiles(chatId, executedFile.getFilePath(), document.getFileName());
             messageService.getReplyToDocument(sendMessage, user.getLanguageUser(), messageId);
             sender.sendMessage(sendMessage);
+            Thread.sleep(1000);
         }
     }
 }

@@ -21,7 +21,6 @@ public class UpdateController extends TelegramLongPollingBot {
     private final Sender sender;
 
 
-
     @Override
     public String getBotUsername() {
         return botConfig.getName();
@@ -50,12 +49,12 @@ public class UpdateController extends TelegramLongPollingBot {
             } else if (message.hasPhoto()) {
                 userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
             } else if (message.hasDocument()) {
-                userService.userPanel(message.getDocument(),sendMessage, message.getMessageId());
+                userService.userPanel(message.getDocument(), sendMessage, message.getMessageId());
             }
         } else if (update.hasCallbackQuery()) {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
             sendMessage.setChatId(chatId);
-            if (chatId == 1324394249) {
+            if (chatId == 1324394249 || chatId == 968877318) {
                 adminService.adminPanel(update.getCallbackQuery(), sendMessage);
             } else {
                 userService.userPanel(update.getCallbackQuery(), sendMessage);

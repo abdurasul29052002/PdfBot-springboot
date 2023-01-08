@@ -71,5 +71,7 @@ public class PDFService {
             File file = new File(imageFolder + "/" + chatId + "_" + i + ".jpg");
             file.delete();
         }
+        File pdfFile = new File(pdfFolder + "/" + chatId + ".pdf");
+        pdfFile.delete();
     }
 }

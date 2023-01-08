@@ -41,10 +41,12 @@ public class ZipService {
 
     public void deleteFiles(Long chatId) {
         File file = new File(compressFolder + "/" + chatId);
+        File zipFile = new File(compressFolder + "/" + chatId + ".zip");
         File[] files = file.listFiles();
         for (File file1 : files != null ? files : new File[0]) {
             file1.delete();
         }
         file.delete();
+        zipFile.delete();
     }
 }
