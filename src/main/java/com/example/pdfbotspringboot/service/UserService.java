@@ -1,6 +1,5 @@
 package com.example.pdfbotspringboot.service;
 
-import com.example.pdfbotspringboot.PdfBotSpringbootApplication;
 import com.example.pdfbotspringboot.component.Sender;
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.enums.BotState;
@@ -16,7 +15,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

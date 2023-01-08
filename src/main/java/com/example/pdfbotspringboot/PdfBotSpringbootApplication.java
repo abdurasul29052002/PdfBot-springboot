@@ -1,23 +1,13 @@
 package com.example.pdfbotspringboot;
 
-import com.example.pdfbotspringboot.config.BotConfig;
-import com.example.pdfbotspringboot.entity.User;
-import com.example.pdfbotspringboot.service.AdminService;
-import com.example.pdfbotspringboot.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.glassfish.grizzly.http.util.TimeStamp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 

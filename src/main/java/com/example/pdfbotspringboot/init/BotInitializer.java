@@ -1,6 +1,5 @@
 package com.example.pdfbotspringboot.init;
 
-import com.example.pdfbotspringboot.config.BotConfig;
 import com.example.pdfbotspringboot.controller.UpdateController;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

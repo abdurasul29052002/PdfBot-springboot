@@ -2,22 +2,20 @@ package com.example.pdfbotspringboot.service;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
-import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.*;
+import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.apiUrl;
+import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.compressFolder;
 
 @Service
 public class ZipService {
