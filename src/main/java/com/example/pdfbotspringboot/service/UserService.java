@@ -98,6 +98,9 @@ public class UserService {
                     countZips++;
                     return;
                 }
+                case "/help" -> {
+                    sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
+                }
                 default -> {
                     messageService.getGreetingMessage(sendMessage, user);
                 }
