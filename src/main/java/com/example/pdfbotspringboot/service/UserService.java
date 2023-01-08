@@ -101,6 +101,11 @@ public class UserService {
                 case "/help" -> {
                     sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
                 }
+                case "/lang" ->{
+                    user.setBotState(BotState.GET_LANG);
+                    userRepository.save(user);
+                    messageService.getGreetingMessage(sendMessage, currentUser.getFirstName());
+                }
                 default -> {
                     messageService.getGreetingMessage(sendMessage, user);
                 }
@@ -124,21 +129,24 @@ public class UserService {
     public void userPanel(CallbackQuery callbackQuery, SendMessage sendMessage) {
         String callBackData = callbackQuery.getData();
         Long chatId = callbackQuery.getMessage().getChatId();
-        sendMessage.setChatId(chatId);
         User user = userRepository.findByUserId(chatId).orElseThrow();
-        switch (callBackData) {
-            case "English" -> {
-                user.setLanguageUser(Language.ENGLISH);
+        if (user.getBotState().equals(BotState.GET_LANG)) {
+            switch (callBackData) {
+                case "English" -> {
+                    user.setLanguageUser(Language.ENGLISH);
+                }
+                case "O`zbekcha" -> {
+                    user.setLanguageUser(Language.UZBEK);
+                }
+                case "Русский" -> {
+                    user.setLanguageUser(Language.RUS);
+                }
             }
-            case "O`zbekcha" -> {
-                user.setLanguageUser(Language.UZBEK);
-            }
-            case "Русский" -> {
-                user.setLanguageUser(Language.RUS);
-            }
+            user.setBotState(BotState.START);
+            messageService.getGreetingMessage(sendMessage, user);
+        }else {
+            sendMessage.setText("Xatolik /start bilan botni qayta ishga tushuring");
         }
-        user.setBotState(BotState.START);
-        messageService.getGreetingMessage(sendMessage, user);
         userRepository.save(user);
         sender.sendMessage(sendMessage);
     }
