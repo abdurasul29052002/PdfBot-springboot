@@ -44,7 +44,7 @@ public class PdfBotSpringbootApplication {
                 countZips = 0;
                 System.out.println("Timer ishladi " + LocalDateTime.now());
             }
-        },Date.valueOf(LocalDate.of(2023,1,8)),dayInMilliseconds);
+        },Date.valueOf(LocalDate.of(2023,1,9)),dayInMilliseconds);
 
     }
 
