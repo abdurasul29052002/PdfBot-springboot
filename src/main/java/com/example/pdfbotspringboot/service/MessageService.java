@@ -132,13 +132,13 @@ public class MessageService {
     public void getAskDocumentForCompress(SendMessage sendMessage, Language languageUser) {
         switch (languageUser) {
             case ENGLISH -> {
-                sendMessage.setText("Ok. Send me files for compress.");
+                sendMessage.setText("Ok. Send me files for compress.\n\nPlease send only file‼");
             }
             case RUS -> {
-                sendMessage.setText("Ок. Отправте мне файлы для сжатие.");
+                sendMessage.setText("Ок. Отправте мне файлы для сжатие.\n\nПожалуйста отправьте только файлы‼");
             }
             case UZBEK -> {
-                sendMessage.setText("Yaxshi. Zip qilish uchun fayllarni yuboring.");
+                sendMessage.setText("Yaxshi. Zip qilish uchun fayllarni yuboring.\n\nIltimos faqat fayl jo`nating‼");
             }
         }
         sendMessage.setReplyMarkup(null);
@@ -158,5 +158,9 @@ public class MessageService {
         }
         sendMessage.setReplyMarkup(keyboardService.getCompressKeyboard(language));
         sendMessage.setReplyToMessageId(messageId);
+    }
+
+    public void getMessageForDeclare(SendMessage sendMessage){
+
     }
 }

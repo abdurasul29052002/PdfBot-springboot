@@ -52,6 +52,7 @@ public class UserService {
                     SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDD");
                     stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
                     sender.execute(stickerMessage);
+                    Thread.sleep(1000);
                     SendChatAction sendChatAction = new SendChatAction();
                     sendChatAction.setAction(ActionType.UPLOADDOCUMENT);
                     sendChatAction.setChatId(chatId);
@@ -80,6 +81,7 @@ public class UserService {
                     SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDA");
                     stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
                     sender.execute(stickerMessage);
+                    Thread.sleep(1000);
                     SendChatAction sendChatAction = new SendChatAction();
                     sendChatAction.setAction(ActionType.UPLOADDOCUMENT);
                     sendChatAction.setChatId(chatId);
