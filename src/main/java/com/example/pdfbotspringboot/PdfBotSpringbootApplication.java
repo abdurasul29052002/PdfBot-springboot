@@ -18,9 +18,9 @@ public class PdfBotSpringbootApplication {
     public static Integer countPdf = 0;
     public static Integer countZips = 0;
     public static final long dayInMilliseconds = 1000*60*60*24;
-    public static final String imageFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\images";
-    public static final String pdfFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\pdf";
-    public static final String compressFolder = "C:\\Users\\Abdurasul\\Desktop\\assets\\compress";
+    public static final String imageFolder = "/home/ubuntu/assets/images";
+    public static final String pdfFolder = "/home/ubuntu/assets/pdf";
+    public static final String compressFolder = "/home/ubuntu/assets/compress";
     public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
 
     public static void main(String[] args) {
