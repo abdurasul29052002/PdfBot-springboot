@@ -98,23 +98,15 @@ public class UserService {
                     countZips++;
                     return;
                 }
-                case "Referral system", "Реферальная система", "Referal tizimi" ->{
-                    messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
-                }
-                case "My referrals", "Мои рефераллы", "Mening referallarim" -> {
-                    messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser());
-                }
-                case "/help" -> {
-                    sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
-                }
+                case "Referral system", "Реферальная система", "Referal tizimi" -> messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
+                case "My referrals", "Мои рефераллы", "Mening referallarim" -> messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser());
+                case "/help" -> sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
                 case "/lang" ->{
                     user.setBotState(BotState.GET_LANG);
                     userRepository.save(user);
                     messageService.getGreetingMessage(sendMessage, currentUser.getFirstName());
                 }
-                case "/start"->{
-                    messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
-                }
+                case "/start"-> messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
             }
         } else {
             User user = new User(
@@ -147,15 +139,9 @@ public class UserService {
         User user = userRepository.findByUserId(chatId).orElseThrow();
         if (user.getBotState().equals(BotState.GET_LANG)) {
             switch (callBackData) {
-                case "English" -> {
-                    user.setLanguageUser(Language.ENGLISH);
-                }
-                case "O`zbekcha" -> {
-                    user.setLanguageUser(Language.UZBEK);
-                }
-                case "Русский" -> {
-                    user.setLanguageUser(Language.RUS);
-                }
+                case "English" -> user.setLanguageUser(Language.ENGLISH);
+                case "O`zbekcha" -> user.setLanguageUser(Language.UZBEK);
+                case "Русский" -> user.setLanguageUser(Language.RUS);
             }
             user.setBotState(BotState.START);
             messageService.getGreetingMessage(sendMessage, user.getLanguageUser());

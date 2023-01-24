@@ -133,15 +133,9 @@ public class KeyboardService {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         InlineKeyboardButton shareButton = new InlineKeyboardButton();
         switch (language) {
-            case ENGLISH -> {
-                shareButton.setText("Share");
-            }
-            case RUS -> {
-                shareButton.setText("Поделится");
-            }
-            case UZBEK -> {
-                shareButton.setText("Ulashish");
-            }
+            case ENGLISH -> shareButton.setText("Share");
+            case RUS -> shareButton.setText("Поделится");
+            case UZBEK -> shareButton.setText("Ulashish");
         }
         shareButton.setUrl("https://t.me/share/url?url=https://t.me/pdfdocsbot");
         row.add(shareButton);
