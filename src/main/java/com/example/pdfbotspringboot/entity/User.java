@@ -30,4 +30,7 @@ public class User {
     private Language languageUser;
 
     private Boolean active = true;
+
+    @ManyToOne
+    private User invitedBy;
 }

@@ -98,6 +98,9 @@ public class UserService {
                     countZips++;
                     return;
                 }
+                case "Referral system", "Реферальная система", "Referal tizimi" ->{
+                    messageService.referralSystemMessage(sendMessage, user.getLanguageUser());
+                }
                 case "/help" -> {
                     sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
                 }
@@ -106,8 +109,8 @@ public class UserService {
                     userRepository.save(user);
                     messageService.getGreetingMessage(sendMessage, currentUser.getFirstName());
                 }
-                default -> {
-                    messageService.getGreetingMessage(sendMessage, user);
+                case "/start"->{
+                    messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
                 }
             }
         } else {
@@ -118,7 +121,16 @@ public class UserService {
                     BotState.GET_LANG,
                     null,
                     true
+                    ,null
             );
+            if (text.startsWith("/start") && !text.equals("/start")){
+                String userId = text.substring(7);
+                User invitedUser = userRepository.findByUserId(Long.valueOf(userId)).orElseThrow();
+                user.setInvitedBy(invitedUser);
+                SendMessage referralMessage = new SendMessage(chatId.toString(), "");
+                messageService.newReferralMessage(referralMessage, user, invitedUser.getLanguageUser());
+                sender.execute(referralMessage);
+            }
             userRepository.save(user);
             countUsers++;
             messageService.getGreetingMessage(sendMessage, currentUser.getFirstName());
@@ -143,7 +155,7 @@ public class UserService {
                 }
             }
             user.setBotState(BotState.START);
-            messageService.getGreetingMessage(sendMessage, user);
+            messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
         }else {
             sendMessage.setText("Xatolik /start bilan botni qayta ishga tushuring");
         }

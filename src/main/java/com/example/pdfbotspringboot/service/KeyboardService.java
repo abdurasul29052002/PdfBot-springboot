@@ -3,6 +3,7 @@ package com.example.pdfbotspringboot.service;
 import com.example.pdfbotspringboot.enums.Language;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -52,21 +53,24 @@ public class KeyboardService {
                 return getReplyKeyboard(
                         2,
                         "Generate PDF \uD83D\uDCD5",
-                        "Compress files\uD83D\uDCDA"
+                        "Compress files\uD83D\uDCDA",
+                        "Referral system"
                 );
             }
             case RUS -> {
                 return getReplyKeyboard(
                         2,
                         "Генерировать PDF \uD83D\uDCD5",
-                        "Сжат файлы\uD83D\uDCDA"
+                        "Сжат файлы\uD83D\uDCDA",
+                        "Реферальная система"
                 );
             }
             case UZBEK -> {
                 return getReplyKeyboard(
                         2,
                         "PDF yaratish \uD83D\uDCD5",
-                        "Fayllarni zip qilish\uD83D\uDCDA"
+                        "Fayllarni zip qilish\uD83D\uDCDA",
+                        "Referal tizimi"
                 );
             }
             default -> {
@@ -119,7 +123,7 @@ public class KeyboardService {
                 );
             }
             default -> {
-                return new ReplyKeyboardMarkup();
+                return null;
             }
         }
     }
@@ -143,5 +147,37 @@ public class KeyboardService {
         row.add(shareButton);
         rows.add(row);
         return new InlineKeyboardMarkup(rows);
+    }
+
+    public ReplyKeyboard getReferralKeyboard(Language language) {
+        switch (language) {
+            case ENGLISH -> {
+                return getReplyKeyboard(
+                        2,
+                        "My referrals",
+                        "My referral link",
+                        "Top referrals"
+                );
+            }
+            case RUS -> {
+                return getReplyKeyboard(
+                        2,
+                        "Мои рефераллы",
+                        "Моя рефералная ссылка",
+                        "Топ рефераллы"
+                );
+            }
+            case UZBEK -> {
+                return getReplyKeyboard(
+                        2,
+                        "Mening referallarim",
+                        "Mening referal ssilkam",
+                        "Top referallar"
+                );
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 }

@@ -26,8 +26,7 @@ public class MessageService {
         sendMessage.setText(stringBuilder.toString());
     }
 
-    public void getGreetingMessage(SendMessage sendMessage, User user){
-        Language language = user.getLanguageUser();
+    public void getGreetingMessage(SendMessage sendMessage, Language language){
         switch (language){
             case ENGLISH -> {
                 sendMessage.setText("<b>Hi</b> , This bot helps you for media processing that can work with pdf documents\n\n" +
@@ -159,5 +158,34 @@ public class MessageService {
 
     public void getMessageForDeclare(SendMessage sendMessage){
 
+    }
+
+    public void newReferralMessage(SendMessage sendMessage, User user, Language language) {
+        switch (language) {
+            case ENGLISH -> {
+                sendMessage.setText("You are invited a new user " + user.getUserName());
+            }
+            case RUS -> {
+                sendMessage.setText("Вы пригласили новый пользовател " + user.getUserName());
+            }
+            case UZBEK -> {
+                sendMessage.setText("Siz yangi foydalanuvchi taklif qildingiz " + user.getUserName());
+            }
+        }
+    }
+
+    public void referralSystemMessage(SendMessage sendMessage, Language language) {
+        switch (language) {
+            case ENGLISH -> {
+                sendMessage.setText("Welcome to referral system");
+            }
+            case RUS -> {
+                sendMessage.setText("Добро пожаловать на рефералная система");
+            }
+            case UZBEK -> {
+                sendMessage.setText("Referal tizimiga hush kelibsiz");
+            }
+        }
+        sendMessage.setReplyMarkup(keyboardService.getReferralKeyboard(language));
     }
 }
