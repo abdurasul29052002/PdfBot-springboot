@@ -74,7 +74,7 @@ public class KeyboardService {
                 );
             }
             default -> {
-                return new ReplyKeyboardMarkup();
+                return null;
             }
         }
     }
@@ -100,7 +100,7 @@ public class KeyboardService {
                 );
             }
             default -> {
-                return new ReplyKeyboardMarkup();
+                return null;
             }
         }
     }
