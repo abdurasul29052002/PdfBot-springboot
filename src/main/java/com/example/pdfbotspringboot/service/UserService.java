@@ -99,7 +99,10 @@ public class UserService {
                     return;
                 }
                 case "Referral system", "Реферальная система", "Referal tizimi" ->{
-                    messageService.referralSystemMessage(sendMessage, user.getLanguageUser());
+                    messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
+                }
+                case "My referrals", "Мои рефераллы", "Mening referallarim" -> {
+                    messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser());
                 }
                 case "/help" -> {
                     sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
@@ -128,7 +131,7 @@ public class UserService {
                 User invitedUser = userRepository.findByUserId(Long.valueOf(userId)).orElseThrow();
                 user.setInvitedBy(invitedUser);
                 SendMessage referralMessage = new SendMessage(chatId.toString(), "");
-                messageService.newReferralMessage(referralMessage, user, invitedUser.getLanguageUser());
+                messageService.getNewReferralMessage(referralMessage, user, invitedUser.getLanguageUser());
                 sender.execute(referralMessage);
             }
             userRepository.save(user);

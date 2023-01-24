@@ -10,4 +10,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserId(Long userId);
     Integer countAllByActive(Boolean active);
+    Integer countAllByInvitedById(Long invitedBy_id);
 }

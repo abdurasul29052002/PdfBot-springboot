@@ -2,6 +2,7 @@ package com.example.pdfbotspringboot.service;
 
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.enums.Language;
+import com.example.pdfbotspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 public class MessageService {
 
     private final KeyboardService keyboardService;
+    private final UserRepository userRepository;
 
     public void getGreetingMessage(SendMessage sendMessage, String firstName){
         StringBuilder stringBuilder = new StringBuilder();
@@ -160,7 +162,7 @@ public class MessageService {
 
     }
 
-    public void newReferralMessage(SendMessage sendMessage, User user, Language language) {
+    public void getNewReferralMessage(SendMessage sendMessage, User user, Language language) {
         switch (language) {
             case ENGLISH -> {
                 sendMessage.setText("You are invited a new user " + user.getUserName());
@@ -174,7 +176,7 @@ public class MessageService {
         }
     }
 
-    public void referralSystemMessage(SendMessage sendMessage, Language language) {
+    public void getReferralSystemMessage(SendMessage sendMessage, Language language) {
         switch (language) {
             case ENGLISH -> {
                 sendMessage.setText("Welcome to referral system");
@@ -187,5 +189,19 @@ public class MessageService {
             }
         }
         sendMessage.setReplyMarkup(keyboardService.getReferralKeyboard(language));
+    }
+
+    public void getMyReferralsMessage(SendMessage sendMessage, Language language) {
+        switch (language){
+            case ENGLISH -> {
+                sendMessage.setText("Your referrals are " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
+            }
+            case RUS -> {
+                sendMessage.setText("Ваш рефералы " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
+            }
+            case UZBEK -> {
+                sendMessage.setText("Sizning referallaringiz soni " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
+            }
+        }
     }
 }
