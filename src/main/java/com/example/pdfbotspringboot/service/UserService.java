@@ -100,6 +100,7 @@ public class UserService {
                 }
                 case "Referral system", "Реферальная система", "Referal tizimi" -> messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
                 case "My referrals", "Мои рефераллы", "Mening referallarim" -> messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser());
+                case "My referral link", "Моя рефералная ссылка", "Mening referal ssilkam" -> messageService.getReferralLinkMessage(sendMessage, user.getLanguageUser());
                 case "/help" -> sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
                 case "/lang" ->{
                     user.setBotState(BotState.GET_LANG);

@@ -135,4 +135,14 @@ public class MessageService {
             case UZBEK -> sendMessage.setText("Sizning referallaringiz soni " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
         }
     }
+
+    public void getReferralLinkMessage(SendMessage sendMessage, Language language) {
+        switch (language){
+            case ENGLISH -> sendMessage.setText("This is your referral link.\nShare our bot to your friends and win a prize.\n\n");
+            case RUS -> sendMessage.setText("Эта твоя рефералная ссылка.\nПоделис наш бот на ваших друзей и выиграй приз.\n\n");
+            case UZBEK -> sendMessage.setText("Bu sizning referal ssilkangiz.\nBotimizni do`stlaringizga ulashing va sovg`ani yutib oling.\n\n");
+        }
+        sendMessage.setText(sendMessage.getText() + "https://t.me/pdfdocsbot?start=" + sendMessage.getChatId());
+        sendMessage.setReplyMarkup(keyboardService.getShareKeyboard(language));
+    }
 }

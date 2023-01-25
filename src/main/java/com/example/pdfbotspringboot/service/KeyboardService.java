@@ -137,7 +137,7 @@ public class KeyboardService {
             case RUS -> shareButton.setText("Поделится");
             case UZBEK -> shareButton.setText("Ulashish");
         }
-        shareButton.setUrl("https://t.me/share/url?url=https://t.me/pdfdocsbot");
+        shareButton.setUrl("https://t.me/share/url?url=https://t.me/pdfdocsbot?start=" + UserService.currentUser.getId());
         row.add(shareButton);
         rows.add(row);
         return new InlineKeyboardMarkup(rows);
