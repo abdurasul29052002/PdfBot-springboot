@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class KeyboardService {
 
-    public ReplyKeyboardMarkup getReplyKeyboard(int columnCount, String... texts) {
+    private ReplyKeyboardMarkup getReplyKeyboard(int columnCount, String... texts) {
         int buttonCount = texts.length;
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();
@@ -31,7 +31,7 @@ public class KeyboardService {
         return replyKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup getInlineKeyboard(int columnCount, String... texts) {
+    private InlineKeyboardMarkup getInlineKeyboard(int columnCount, String... texts) {
         int buttonCount = texts.length;
         List<InlineKeyboardButton> row = new ArrayList<>();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
@@ -173,5 +173,26 @@ public class KeyboardService {
                 return null;
             }
         }
+    }
+
+    public ReplyKeyboardMarkup getAdminKeyboard() {
+        return getReplyKeyboard(
+                2,
+                "Foydalanuvchilarga habar jo`natish",
+                "Foydalanuvchilar soni",
+                "Statistika"
+        );
+    }
+
+    public InlineKeyboardMarkup getYesOrNoKeyboard(){
+        return getInlineKeyboard(
+                2,
+                "Ha✅",
+                "Yo`q❌"
+        );
+    }
+
+    public InlineKeyboardMarkup getLanguageKeyboard() {
+        return getInlineKeyboard(3, "English", "Русский", "O`zbekcha");
     }
 }

@@ -18,7 +18,7 @@ public class MessageService {
     public void getGreetingMessage(SendMessage sendMessage, String firstName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Salom <b>" + firstName + "</b> Til tanlang \uD83C\uDDFA\uD83C\uDDFF").append(System.lineSeparator()).append("Привет <b>" + firstName + "</b> Выберите свой язык \uD83C\uDDF7\uD83C\uDDFA").append(System.lineSeparator()).append("Helllo <b>" + firstName + "</b> Choose your language \uD83C\uDDFA\uD83C\uDDF8");
-        sendMessage.setReplyMarkup(keyboardService.getInlineKeyboard(3, "English", "Русский", "O`zbekcha"));
+        sendMessage.setReplyMarkup(keyboardService.getLanguageKeyboard());
         sendMessage.setText(stringBuilder.toString());
     }
 

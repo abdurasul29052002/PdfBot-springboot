@@ -67,12 +67,7 @@ public class AdminService {
         switch (text) {
             case "/start" -> {
                 sendMessage.setText("Assalomu alaykum.\nAdmin panelga hush kelibsiz");
-                ReplyKeyboardMarkup replyKeyboard = keyboardService.getReplyKeyboard(
-                        2,
-                        "Foydalanuvchilarga habar jo`natish",
-                        "Foydalanuvchilar soni",
-                        "Statistika"
-                );
+                ReplyKeyboardMarkup replyKeyboard = keyboardService.getAdminKeyboard();
                 sendMessage.setReplyMarkup(replyKeyboard);
             }
             case "Foydalanuvchilarga habar jo`natish" -> {
@@ -86,11 +81,7 @@ public class AdminService {
             }
             default -> {
                 declareMessage.add(text);
-                InlineKeyboardMarkup inlineKeyboard = keyboardService.getInlineKeyboard(
-                        2,
-                        "Ha✅",
-                        "Yo`q❌"
-                );
+                InlineKeyboardMarkup inlineKeyboard = keyboardService.getYesOrNoKeyboard();
                 sender.sendMessage(new SendMessage(sendMessage.getChatId(), text));
                 sendMessage.setText("Haqiqatdan ham habarni jo`natmoqchimisiz siz ning habar yuqoridagi dek");
                 sendMessage.setReplyMarkup(inlineKeyboard);
