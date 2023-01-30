@@ -40,13 +40,17 @@ public class UserService {
         if (userRepository.existsByUserId(chatId)) {
             User user = userRepository.findByUserId(chatId).orElseThrow();
             switch (text) {
-                case "PDF yaratish \uD83D\uDCD5", "Generate PDF \uD83D\uDCD5", "Генерировать PDF \uD83D\uDCD5" -> {
+                case "PDF yaratish \uD83D\uDCD5",
+                        "Generate PDF \uD83D\uDCD5",
+                        "Генерировать PDF \uD83D\uDCD5" -> {
                     messageService.getAskPhotoMessage(sendMessage, user.getLanguageUser());
                     userPhotosCount.put(chatId, 0);
                     user.setBotState(BotState.GET_PHOTO);
                     userRepository.save(user);
                 }
-                case "Generate\uD83D\uDCD5", "Yaratish\uD83D\uDCD5", "Генерировать\uD83D\uDCD5" -> {
+                case "Generate\uD83D\uDCD5",
+                        "Yaratish\uD83D\uDCD5",
+                        "Генерировать\uD83D\uDCD5" -> {
                     SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDD");
                     stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
                     sender.execute(stickerMessage);
@@ -70,12 +74,16 @@ public class UserService {
                     userRepository.save(user);
                     return;
                 }
-                case "Compress files\uD83D\uDCDA", "Сжат файлы\uD83D\uDCDA", "Fayllarni zip qilish\uD83D\uDCDA" -> {
+                case "Compress files\uD83D\uDCDA",
+                        "Сжать файлы\uD83D\uDCDA",
+                        "Fayllarni zip qilish\uD83D\uDCDA" -> {
                     messageService.getAskDocumentForCompress(sendMessage, user.getLanguageUser());
                     user.setBotState(BotState.GET_DOCUMENT);
                     userRepository.save(user);
                 }
-                case "Compress\uD83D\uDCDA", "Сжат\uD83D\uDCDA", "Zip\uD83D\uDCDA" -> {
+                case "Compress\uD83D\uDCDA",
+                        "Сжать\uD83D\uDCDA",
+                        "Zip\uD83D\uDCDA" -> {
                     SendMessage stickerMessage = new SendMessage(chatId.toString(),"\uD83D\uDCDA");
                     stickerMessage.setReplyMarkup(keyboardService.getHomeKeyboard(user.getLanguageUser()));
                     sender.execute(stickerMessage);
@@ -98,16 +106,30 @@ public class UserService {
                     countZips++;
                     return;
                 }
-                case "Referral system", "Реферальная система", "Referal tizimi" -> messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
-                case "My referrals", "Мои рефераллы", "Mening referallarim" -> messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser());
-                case "My referral link", "Моя рефералная ссылка", "Mening referal ssilkam" -> messageService.getReferralLinkMessage(sendMessage, user.getLanguageUser());
+                case "Referral system\uD83D\uDC65",
+                        "Реферальная система\uD83D\uDC65",
+                        "Referal tizimi\uD83D\uDC65" -> messageService.getReferralSystemMessage(sendMessage, user.getLanguageUser());
+                case "My referrals\uD83D\uDC65",
+                        "Мои рефералы\uD83D\uDC65",
+                        "Mening referallarim\uD83D\uDC65" -> messageService.getMyReferralsMessage(sendMessage, user.getLanguageUser(), user.getId());
+                case "My referral link\uD83D\uDD17",
+                        "Моя реферальная ссылка\uD83D\uDD17",
+                        "Mening referal ssilkam\uD83D\uDD17" -> messageService.getReferralLinkMessage(sendMessage, user.getLanguageUser());
+                case "Top referrals\uD83C\uDFC6",
+                        "Топ рефералы\uD83C\uDFC6",
+                        "Top referallar\uD83C\uDFC6" -> messageService.getTopReferralsMessage(sendMessage, user.getLanguageUser());
+                case "Main menu\uD83C\uDFE0",
+                        "Главное меню\uD83C\uDFE0",
+                        "Bosh menyu\uD83C\uDFE0" -> messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
                 case "/help" -> sendMessage.setText("https://telegra.ph/PDF-maker-bot--PDF-file-qollanmasi-12-05");
                 case "/lang" ->{
                     user.setBotState(BotState.GET_LANG);
                     userRepository.save(user);
                     messageService.getGreetingMessage(sendMessage, currentUser.getFirstName());
                 }
-                case "/start"-> messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
+                case "/start"-> {
+                    messageService.getGreetingMessage(sendMessage, user.getLanguageUser());
+                }
             }
         } else {
             User user = new User(
@@ -117,15 +139,18 @@ public class UserService {
                     BotState.GET_LANG,
                     null,
                     true
-                    ,null
+                    ,null,
+                    0
             );
             if (text.startsWith("/start") && !text.equals("/start")){
                 String userId = text.substring(7);
                 User invitedUser = userRepository.findByUserId(Long.valueOf(userId)).orElseThrow();
                 user.setInvitedBy(invitedUser);
-                SendMessage referralMessage = new SendMessage(chatId.toString(), "");
+                invitedUser.setReferralCount(invitedUser.getReferralCount() + 1);
+                SendMessage referralMessage = new SendMessage(invitedUser.getUserId().toString(), "");
                 messageService.getNewReferralMessage(referralMessage, user, invitedUser.getLanguageUser());
                 sender.execute(referralMessage);
+                userRepository.save(invitedUser);
             }
             userRepository.save(user);
             countUsers++;

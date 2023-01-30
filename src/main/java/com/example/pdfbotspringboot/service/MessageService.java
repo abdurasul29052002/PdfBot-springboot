@@ -1,12 +1,16 @@
 package com.example.pdfbotspringboot.service;
 
+import com.example.pdfbotspringboot.config.BotConfig;
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.enums.Language;
 import com.example.pdfbotspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +18,7 @@ public class MessageService {
 
     private final KeyboardService keyboardService;
     private final UserRepository userRepository;
+    private final BotConfig botConfig;
 
     public void getGreetingMessage(SendMessage sendMessage, String firstName) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -35,7 +40,7 @@ public class MessageService {
                     <b>Привет</b>, этот бот поможет тебе в нескольких шагах Вы можете узнать больше через /help
 
                     Отправьте нужные изображения, нажав кнопку Генератор PDF.
-                    Вы можете сжат файлы с кнопкой <b>Сжат файлы</b>""");
+                    Вы можете сжать файлы с кнопкой <b>Сжать файлы</b>""");
             case UZBEK -> sendMessage.setText("""
                     <b>Salom</b> , bu bot sizga bir nechta amallarni bajarishda yordam beradi
 
@@ -61,7 +66,7 @@ public class MessageService {
     public void getAskPhotoMessage(SendMessage sendMessage, Language language) {
         switch (language) {
             case ENGLISH -> sendMessage.setText("Please send photos for generating a PDF");
-            case RUS -> sendMessage.setText("Пожалюста отправтье картинки для PDF");
+            case RUS -> sendMessage.setText("Пожалуюста отправьте картинки для PDF");
             case UZBEK -> sendMessage.setText("Iltimos PDF generatsiya qilish uchun rasm yuboring");
         }
         sendMessage.setReplyMarkup(null);
@@ -88,15 +93,17 @@ public class MessageService {
         switch (language) {
             case ENGLISH -> sendMessage.setText("I'm not ready for this files\nPlease use the blow buttons");
             case RUS -> sendMessage.setText("Я пока не готов для зтих файлы\nПожалюста исползуйте кнопки ниже");
-            case UZBEK -> sendMessage.setText("Men hozircha bu fayllar uchun tayyor emasman\nPastdagi tugmalardan foydalaning");
+            case UZBEK ->
+                    sendMessage.setText("Men hozircha bu fayllar uchun tayyor emasman\nPastdagi tugmalardan foydalaning");
         }
     }
 
     public void getAskDocumentForCompress(SendMessage sendMessage, Language languageUser) {
         switch (languageUser) {
             case ENGLISH -> sendMessage.setText("Ok. Send me files for compress.\n\nPlease send only file‼");
-            case RUS -> sendMessage.setText("Ок. Отправте мне файлы для сжатие.\n\nПожалуйста отправьте только файлы‼");
-            case UZBEK -> sendMessage.setText("Yaxshi. Zip qilish uchun fayllarni yuboring.\n\nIltimos faqat fayl jo`nating‼");
+            case RUS -> sendMessage.setText("Ок. Отправте мне файлы для сжатие.\n\nПожалуюста отправьте только файлы‼");
+            case UZBEK ->
+                    sendMessage.setText("Yaxshi. Zip qilish uchun fayllarni yuboring.\n\nIltimos faqat fayl jo`nating‼");
         }
         sendMessage.setReplyMarkup(null);
     }
@@ -122,27 +129,53 @@ public class MessageService {
     public void getReferralSystemMessage(SendMessage sendMessage, Language language) {
         switch (language) {
             case ENGLISH -> sendMessage.setText("Welcome to referral system");
-            case RUS -> sendMessage.setText("Добро пожаловать на рефералная система");
+            case RUS -> sendMessage.setText("Добро пожаловать в рефералную систему");
             case UZBEK -> sendMessage.setText("Referal tizimiga hush kelibsiz");
         }
         sendMessage.setReplyMarkup(keyboardService.getReferralKeyboard(language));
     }
 
-    public void getMyReferralsMessage(SendMessage sendMessage, Language language) {
+    public void getMyReferralsMessage(SendMessage sendMessage, Language language, Long id) {
         switch (language) {
-            case ENGLISH -> sendMessage.setText("Your referrals are " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
-            case RUS -> sendMessage.setText("Ваш рефералы " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
-            case UZBEK -> sendMessage.setText("Sizning referallaringiz soni " + userRepository.countAllByInvitedById(Long.valueOf(sendMessage.getChatId())));
+            case ENGLISH -> sendMessage.setText("Your referrals are " + userRepository.countAllByInvitedById(id));
+            case RUS -> sendMessage.setText("Ваши рефералы " + userRepository.countAllByInvitedById(id));
+            case UZBEK ->
+                    sendMessage.setText("Sizning referallaringiz soni " + userRepository.countAllByInvitedById(id));
         }
     }
 
     public void getReferralLinkMessage(SendMessage sendMessage, Language language) {
-        switch (language){
-            case ENGLISH -> sendMessage.setText("This is your referral link.\nShare our bot to your friends and win a prize.\n\n");
-            case RUS -> sendMessage.setText("Эта твоя рефералная ссылка.\nПоделис наш бот на ваших друзей и выиграй приз.\n\n");
-            case UZBEK -> sendMessage.setText("Bu sizning referal ssilkangiz.\nBotimizni do`stlaringizga ulashing va sovg`ani yutib oling.\n\n");
+        switch (language) {
+            case ENGLISH ->
+                    sendMessage.setText("This is your referral link.\nShare our bot to your friends and win a prize.\n\n");
+            case RUS ->
+                    sendMessage.setText("Эта твоя реферальная ссылка.\nВыиграй приз поделив ссылку бота.\n\n");
+            case UZBEK ->
+                    sendMessage.setText("Bu sizning referal ssilkangiz.\nBotimizni do`stlaringizga ulashing va sovg`ani yutib oling.\n\n");
         }
-        sendMessage.setText(sendMessage.getText() + "https://t.me/pdfdocsbot?start=" + sendMessage.getChatId());
+        sendMessage.setText(sendMessage.getText() + "https://t.me/" + botConfig.getName() + "?start=" + sendMessage.getChatId());
         sendMessage.setReplyMarkup(keyboardService.getShareKeyboard(language));
+    }
+
+    public void getTopReferralsMessage(SendMessage sendMessage, Language language) {
+        List<User> topReferrals = userRepository.findAll(Sort.by(Sort.Direction.DESC, "referralCount"));
+        switch (language) {
+            case ENGLISH -> sendMessage.setText("\uD83C\uDFC6 Top referrals \uD83C\uDFC6 \n");
+            case RUS -> sendMessage.setText("\uD83C\uDFC6 Топ рефералы \uD83C\uDFC6 \n");
+            case UZBEK -> sendMessage.setText("\uD83C\uDFC6 Eng ko`p taklif qilganlar \uD83C\uDFC6 \n");
+        }
+        for (int i = 0; i < topReferrals.size(); i++) {
+            User topReferral = topReferrals.get(i);
+            switch (i+1) {
+                case 1 -> sendMessage.setText(sendMessage.getText() + "\uD83E\uDD47 \t");
+                case 2 -> sendMessage.setText(sendMessage.getText() + "\uD83E\uDD48 \t");
+                case 3 -> sendMessage.setText(sendMessage.getText() + "\uD83E\uDD49 \t");
+                default -> sendMessage.setText(sendMessage.getText() + (i+1) + "\t   ");
+            }
+            sendMessage.setText(sendMessage.getText() + topReferral.getUserName() + ": \t  " + topReferral.getReferralCount() + "\n");
+            if ((i+1) == 10){
+                break;
+            }
+        }
     }
 }

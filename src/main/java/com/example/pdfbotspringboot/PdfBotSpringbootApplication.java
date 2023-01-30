@@ -8,6 +8,8 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +24,7 @@ public class PdfBotSpringbootApplication {
     public static final String pdfFolder = "/home/ubuntu/assets/pdf";
     public static final String compressFolder = "/home/ubuntu/assets/compress";
     public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
+    public static Map<Long, String> admins = new HashMap<>();
 
     public static void main(String[] args) {
         SpringApplication.run(PdfBotSpringbootApplication.class, args);
@@ -34,7 +37,7 @@ public class PdfBotSpringbootApplication {
                 countZips = 0;
                 System.out.println("Timer ishladi " + LocalDateTime.now());
             }
-        },Date.valueOf(LocalDate.of(2023,1,9)),dayInMilliseconds);
+        },Date.valueOf(LocalDate.of(2023,2,1)),dayInMilliseconds);
 
     }
 

@@ -33,4 +33,6 @@ public class User {
 
     @ManyToOne
     private User invitedBy;
+
+    private Integer referralCount;
 }

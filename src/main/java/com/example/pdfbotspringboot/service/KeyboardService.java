@@ -54,15 +54,15 @@ public class KeyboardService {
                         2,
                         "Generate PDF \uD83D\uDCD5",
                         "Compress files\uD83D\uDCDA",
-                        "Referral system"
+                        "Referral system\uD83D\uDC65"
                 );
             }
             case RUS -> {
                 return getReplyKeyboard(
                         2,
                         "Генерировать PDF \uD83D\uDCD5",
-                        "Сжат файлы\uD83D\uDCDA",
-                        "Реферальная система"
+                        "Сжать файлы\uD83D\uDCDA",
+                        "Реферальная система\uD83D\uDC65"
                 );
             }
             case UZBEK -> {
@@ -70,7 +70,7 @@ public class KeyboardService {
                         2,
                         "PDF yaratish \uD83D\uDCD5",
                         "Fayllarni zip qilish\uD83D\uDCDA",
-                        "Referal tizimi"
+                        "Referal tizimi\uD83D\uDC65"
                 );
             }
             default -> {
@@ -114,7 +114,7 @@ public class KeyboardService {
             }
             case RUS -> {
                 return getReplyKeyboard(
-                        1, "Сжат\uD83D\uDCDA"
+                        1, "Сжать\uD83D\uDCDA"
                 );
             }
             case UZBEK -> {
@@ -148,25 +148,28 @@ public class KeyboardService {
             case ENGLISH -> {
                 return getReplyKeyboard(
                         2,
-                        "My referrals",
-                        "My referral link",
-                        "Top referrals"
+                        "My referrals\uD83D\uDC65",
+                        "My referral link\uD83D\uDD17",
+                        "Top referrals\uD83C\uDFC6",
+                        "Main menu\uD83C\uDFE0"
                 );
             }
             case RUS -> {
                 return getReplyKeyboard(
                         2,
-                        "Мои рефераллы",
-                        "Моя рефералная ссылка",
-                        "Топ рефераллы"
+                        "Мои рефералы\uD83D\uDC65",
+                        "Моя реферальная ссылка\uD83D\uDD17",
+                        "Топ рефералы\uD83C\uDFC6",
+                        "Главное меню\uD83C\uDFE0"
                 );
             }
             case UZBEK -> {
                 return getReplyKeyboard(
                         2,
-                        "Mening referallarim",
-                        "Mening referal ssilkam",
-                        "Top referallar"
+                        "Mening referallarim\uD83D\uDC65",
+                        "Mening referal ssilkam\uD83D\uDD17",
+                        "Top referallar\uD83C\uDFC6",
+                        "Bosh menyu\uD83C\uDFE0"
                 );
             }
             default -> {
@@ -194,5 +197,9 @@ public class KeyboardService {
 
     public InlineKeyboardMarkup getLanguageKeyboard() {
         return getInlineKeyboard(3, "English", "Русский", "O`zbekcha");
+    }
+
+    public ReplyKeyboardMarkup getChoosePanelKeyboard(){
+        return getReplyKeyboard(2, "Admin panel", "User panel");
     }
 }

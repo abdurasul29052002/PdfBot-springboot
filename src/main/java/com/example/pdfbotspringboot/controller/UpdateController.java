@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.admins;
+
 @Component
 @RequiredArgsConstructor
 public class UpdateController extends TelegramLongPollingBot {
@@ -41,21 +43,48 @@ public class UpdateController extends TelegramLongPollingBot {
             sendMessage.setChatId(chatId);
             UserService.currentUser = message.getFrom();
             if (message.hasText()) {
-                if (chatId == 1324394249 || chatId == 968877318) {
-                    adminService.adminPanel(message.getText(), sendMessage);
+                if (admins.containsKey(chatId)) {
+                    if (message.getText().equals("/start")){
+                        admins.put(chatId, "ADMIN");
+                    }
+                    if (admins.get(chatId).equals("ADMIN")) {
+                        adminService.adminPanel(message.getText(), sendMessage);
+                    } else {
+                        userService.userPanel(message.getText(), sendMessage);
+                    }
                 } else {
                     userService.userPanel(message.getText(), sendMessage);
                 }
             } else if (message.hasPhoto()) {
-                userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
+                if (admins.containsKey(chatId)) {
+                    if (admins.get(chatId).equals("ADMIN")) {
+                        adminService.adminPanel(message.getPhoto(), sendMessage, message.getCaption());
+                    } else {
+                        userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
+                    }
+                } else {
+                    userService.userPanel(message.getPhoto(), sendMessage, message.getMessageId());
+                }
             } else if (message.hasDocument()) {
-                userService.userPanel(message.getDocument(), sendMessage, message.getMessageId());
+                if (admins.containsKey(chatId)){
+                    if (admins.get(chatId).equals("ADMIN")){
+                        adminService.adminPanel(message.getDocument(), sendMessage);
+                    }else {
+                        userService.userPanel(message.getDocument(), sendMessage, message.getMessageId());
+                    }
+                }else {
+                    userService.userPanel(message.getDocument(), sendMessage, message.getMessageId());
+                }
             }
         } else if (update.hasCallbackQuery()) {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
             sendMessage.setChatId(chatId);
-            if (chatId == 1324394249 || chatId == 968877318) {
-                adminService.adminPanel(update.getCallbackQuery(), sendMessage);
+            if (admins.containsKey(chatId)) {
+                if (admins.get(chatId).equals("ADMIN")) {
+                    adminService.adminPanel(update.getCallbackQuery(), sendMessage);
+                } else {
+                    userService.userPanel(update.getCallbackQuery(), sendMessage);
+                }
             } else {
                 userService.userPanel(update.getCallbackQuery(), sendMessage);
             }
