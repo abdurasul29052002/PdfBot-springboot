@@ -2,7 +2,6 @@ package com.example.pdfbotspringboot.component;
 
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.repository.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import java.util.List;
 
 import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.declareMessage;
-import static com.example.pdfbotspringboot.service.AdminService.*;
 
 @Component
 @RequiredArgsConstructor

@@ -1,11 +1,8 @@
 package com.example.pdfbotspringboot.service;
 
-import ch.qos.logback.core.util.ExecutorServiceUtil;
 import com.example.pdfbotspringboot.component.CustomThread;
 import com.example.pdfbotspringboot.component.Sender;
-import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.util.Pair;
@@ -29,10 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.*;
 
