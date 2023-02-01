@@ -9,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @PropertySource("classpath:application.yml")
 public class BotConfig {
+
     @Value("${token}")
     private String token;
 

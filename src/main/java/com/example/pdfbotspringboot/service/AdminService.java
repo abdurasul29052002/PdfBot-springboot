@@ -1,5 +1,6 @@
 package com.example.pdfbotspringboot.service;
 
+import com.example.pdfbotspringboot.component.CustomThread;
 import com.example.pdfbotspringboot.component.Sender;
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.repository.UserRepository;
@@ -38,23 +39,8 @@ public class AdminService {
     private final UserRepository userRepository;
     private final Sender sender;
     private final UserService userService;
-    public Pair<String, File> declareMessage = null;
-    private Thread thread;
-    private boolean completed = false;
-
-    @PostConstruct
-    public void init() {
-        thread = new Thread(() -> {
-            List<User> users = userRepository.findAll();
-            if(declareMessage!=null) {
-                if (declareMessage.getSecond().canRead()) {
-                    send(users, new SendPhoto(), declareMessage.getFirst());
-                } else {
-                    send(users, new SendMessage(), declareMessage.getFirst());
-                }
-            }
-        });
-    }
+    private final CustomThread customThread;
+    public static boolean completed = false;
 
     public void adminPanel(String text, SendMessage sendMessage) {
         switch (text) {
@@ -96,18 +82,18 @@ public class AdminService {
     public void adminPanel(CallbackQuery callbackQuery, SendMessage sendMessage) {
         switch (callbackQuery.getData()) {
             case "Ha✅" -> {
-                if (thread.isAlive()) {
+                if (customThread.isAlive()) {
                     if (completed) {
-                        thread.interrupt();
-                        thread.start();
+                        customThread.interrupt();
+                        customThread.start();
                         sendMessage.setText("Habar jo`natish jarayoni boshlandi");
                     } else {
                         sendMessage.setText("Hozirda foydalanuvchilarga habar jo`natish jarayoni ketyapti\n" +
                                 "Tez orada habar jo`natilish jarayoni boshlanadi");
                     }
                 } else {
-                    thread.interrupt();
-                    thread.start();
+                    customThread.interrupt();
+                    customThread.start();
                     completed = false;
                     sendMessage.setText("Habar jo`natish jarayoni boshlandi");
                 }
@@ -133,6 +119,7 @@ public class AdminService {
         sender.sendPhoto(sendPhoto);
         sendMessage.setText("Haqiqatdan ham habarni jo`natmoqchimisiz siz ning habar yuqoridagi dek");
         sendMessage.setReplyMarkup(inlineKeyboard);
+        sender.execute(sendMessage);
     }
 
     public void adminPanel(Document document, SendMessage sendMessage) {
@@ -149,59 +136,4 @@ public class AdminService {
         return path.toFile();
     }
 
-    private void send(List<User> users, SendMessage declareSender, String message){
-        int success = 0, fail = 0;
-        for (User user : users) {
-            declareSender.setChatId(user.getUserId().toString());
-            declareSender.setText(message);
-            if (sender.sendMessage(declareSender)) {
-                success++;
-                user.setActive(true);
-            } else {
-                fail++;
-                user.setActive(false);
-            }
-            userRepository.save(user);
-            int count = success + fail;
-            if (count % 100 == 0 || count == users.size()) {
-                declareSender.setText(count + " ta habar jo`natildi\nSuccess✅: " + success + "\nFail❌: " + fail);
-                declareSender.setChatId("1324394249");
-                sender.sendMessage(declareSender);
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                System.out.println("Too many request exception");
-            }
-        }
-        completed = true;
-    }
-    private void send(List<User> users, SendPhoto sendPhoto, String caption){
-        int success = 0, fail = 0;
-        for (User user : users) {
-            sendPhoto.setChatId(user.getUserId().toString());
-            sendPhoto.setCaption(caption);
-            if (sender.sendPhoto(sendPhoto)) {
-                success++;
-                user.setActive(true);
-            } else {
-                fail++;
-                user.setActive(false);
-            }
-            userRepository.save(user);
-            int count = success + fail;
-            if (count % 100 == 0 || count == users.size()) {
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setText(count + " ta habar jo`natildi\nSuccess✅: " + success + "\nFail❌: " + fail);
-                sendMessage.setChatId("1324394249");
-                sender.sendMessage(sendMessage);
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                System.out.println("Too many request exception");
-            }
-        }
-        completed = true;
-    }
 }
