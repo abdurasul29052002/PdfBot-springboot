@@ -35,19 +35,43 @@ public class MessageService {
                     You can get more information with /help
 
                     You can easily make a pdf with this bot so press button <b>PDF Generator</b>
-                    You can easily compress files with press <b>Compress images</b> button""");
+                    You can easily compress files with press <b>Compress images</b> button
+                    
+                    ⚡️MEGA EVENT ⚡️
+                    Now you can invite your friends to our bot and win big prize.
+                    You can get the referral link from the Referral system menu
+                    🥇 \t 50 000 so`m
+                    🥈 \t 30 000 so`m
+                    🥉 \t 20 000 so`m
+                    """);
             case RUS -> sendMessage.setText("""
                     <b>Привет</b>, этот бот поможет тебе в нескольких шагах Вы можете узнать больше через /help
 
                     Отправьте нужные изображения, нажав кнопку Генератор PDF.
-                    Вы можете сжать файлы с кнопкой <b>Сжать файлы</b>""");
+                    Вы можете сжать файлы с кнопкой <b>Сжать файлы</b>
+                    
+                    ⚡ МЕГА АКЦИЯ ⚡ 
+                    Теперь вы можете пригласить своих друзей в наш бот и выиграть крупный приз. 
+                    Получить реферальную ссылку можно в меню Реферальная система.
+                    🥇 \t 50 000 so`m
+                    🥈 \t 30 000 so`m
+                    🥉 \t 20 000 so`m
+                    """);
             case UZBEK -> sendMessage.setText("""
                     <b>Salom</b> , bu bot sizga bir nechta amallarni bajarishda yordam beradi
 
                     /help buyrug'ini bosish orqali qo'shimcha ma'lumot olishingiz mumkin
 
                     <b>PDF yaratish</b> tugmasi orqali siz rasmlarni osongina pdf file ko'rinishiga keltira olasiz
-                    <b>Fayllarni zip qilish</b> tugmasi orqali faylani osongina zip qilishingiz mumkin bo`ladi""");
+                    <b>Fayllarni zip qilish</b> tugmasi orqali faylani osongina zip qilishingiz mumkin bo`ladi
+                    
+                    ⚡ MEGA AKSIYA ⚡
+                    Endilikda siz botimizga do`stlaringizni taklif qilib katta sovg`ani yutib olishingiz mumkin
+                    Referal havolani Referal tizimi menyusidan olishingiz mumkin
+                    🥇 \t 50 000 so`m
+                    🥈 \t 30 000 so`m
+                    🥉 \t 20 000 so`m
+                    """);
         }
         sendMessage.setReplyMarkup(keyboardService.getHomeKeyboard(language));
     }
@@ -165,6 +189,9 @@ public class MessageService {
             case UZBEK -> sendMessage.setText("\uD83C\uDFC6 Eng ko`p taklif qilganlar \uD83C\uDFC6 \n");
         }
         for (int i = 0; i < topReferrals.size(); i++) {
+            if (topReferrals.get(i).getReferralCount()<10){
+                continue;
+            }
             User topReferral = topReferrals.get(i);
             switch (i+1) {
                 case 1 -> sendMessage.setText(sendMessage.getText() + "\uD83E\uDD47 \t");
