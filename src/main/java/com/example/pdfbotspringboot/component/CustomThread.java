@@ -2,6 +2,7 @@ package com.example.pdfbotspringboot.component;
 
 import com.example.pdfbotspringboot.entity.User;
 import com.example.pdfbotspringboot.repository.UserRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,7 +26,10 @@ public class CustomThread extends Thread {
         List<User> users = userRepository.findAll();
         if(declareMessage!=null) {
             if (declareMessage.getSecond().canRead()) {
-                send(users, new SendPhoto("", new InputFile(declareMessage.getSecond())), declareMessage.getFirst());
+                send(users, new SendPhoto("", new InputFile(
+                        declareMessage.getSecond())),
+                        declareMessage.getFirst()
+                );
             } else {
                 send(users, new SendMessage(), declareMessage.getFirst());
             }
@@ -57,7 +61,6 @@ public class CustomThread extends Thread {
                 System.out.println("Too many request exception");
             }
         }
-        completed = true;
     }
     private void send(List<User> users, SendPhoto sendPhoto, String caption){
         int success = 0, fail = 0;
@@ -85,6 +88,5 @@ public class CustomThread extends Thread {
                 System.out.println("Too many request exception");
             }
         }
-        completed = true;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.pdfbotspringboot.service;
 
+import ch.qos.logback.core.util.ExecutorServiceUtil;
 import com.example.pdfbotspringboot.component.CustomThread;
 import com.example.pdfbotspringboot.component.Sender;
 import com.example.pdfbotspringboot.entity.User;
@@ -28,6 +29,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.pdfbotspringboot.PdfBotSpringbootApplication.*;
 
@@ -40,7 +45,6 @@ public class AdminService {
     private final Sender sender;
     private final UserService userService;
     private final CustomThread customThread;
-    public static boolean completed = false;
 
     public void adminPanel(String text, SendMessage sendMessage) {
         switch (text) {
@@ -50,13 +54,13 @@ public class AdminService {
                 sendMessage.setReplyMarkup(replyKeyboard);
             }
             case "Admin panel" -> {
-                admins.put(Long.valueOf(sendMessage.getChatId()),"ADMIN");
+                admins.put(Long.valueOf(sendMessage.getChatId()), "ADMIN");
                 sendMessage.setText("Assalomu alaykum.\nAdmin panelga hush kelibsiz");
                 sendMessage.setReplyMarkup(keyboardService.getAdminKeyboard());
             }
-            case "User panel"-> {
+            case "User panel" -> {
                 admins.put(Long.valueOf(sendMessage.getChatId()), "USER");
-                userService.userPanel("/start",sendMessage);
+                userService.userPanel("/start", sendMessage);
                 return;
             }
             case "Foydalanuvchilarga habar jo`natish" -> {
@@ -79,24 +83,15 @@ public class AdminService {
         sender.sendMessage(sendMessage);
     }
 
+    @SneakyThrows
     public void adminPanel(CallbackQuery callbackQuery, SendMessage sendMessage) {
         switch (callbackQuery.getData()) {
             case "Ha✅" -> {
-                if (customThread.isAlive()) {
-                    if (completed) {
-                        customThread.interrupt();
-                        customThread.start();
-                        sendMessage.setText("Habar jo`natish jarayoni boshlandi");
-                    } else {
-                        sendMessage.setText("Hozirda foydalanuvchilarga habar jo`natish jarayoni ketyapti\n" +
-                                "Tez orada habar jo`natilish jarayoni boshlanadi");
-                    }
-                } else {
-                    customThread.interrupt();
-                    customThread.start();
-                    completed = false;
-                    sendMessage.setText("Habar jo`natish jarayoni boshlandi");
-                }
+                CustomThread newCustomThread = new CustomThread(userRepository, sender);
+                System.out.println(newCustomThread.getState().name());
+                System.out.println("Thread id: " + newCustomThread.getId());
+                newCustomThread.start();
+                sendMessage.setText("Habar jo`natish jarayoni boshlandi");
             }
             case "Yo`q❌" -> {
                 sendMessage.setText("Bekor qilindi");
