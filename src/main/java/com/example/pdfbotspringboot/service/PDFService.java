@@ -33,8 +33,6 @@ public class PDFService {
     @PostConstruct
     public void init() {
         apiUrl.append(botConfig.getToken()).append("/");
-        admins.put(1324394249L, "ADMIN");
-        admins.put(968877318L, "ADMIN");
     }
 
     @SneakyThrows

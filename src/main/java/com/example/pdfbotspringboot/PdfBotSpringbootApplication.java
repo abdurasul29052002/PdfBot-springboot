@@ -26,11 +26,15 @@ public class PdfBotSpringbootApplication {
     public static final String pdfFolder = "/home/ubuntu/assets/pdf";
     public static final String compressFolder = "/home/ubuntu/assets/compress";
     public static Pair<String, File> declareMessage = null;
-    public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
-    public static Map<Long, String> admins = new HashMap<>();
+    public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot/");
+    public static Map<Long, String> admins = Map.of(
+            1324394249L, "ADMIN",
+            968877318L, "ADMIN"
+    );
 
     public static void main(String[] args) {
         SpringApplication.run(PdfBotSpringbootApplication.class, args);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -40,7 +44,7 @@ public class PdfBotSpringbootApplication {
                 countZips = 0;
                 System.out.println("Timer ishladi " + LocalDateTime.now());
             }
-        },Date.valueOf(LocalDate.of(2023,2,1)),dayInMilliseconds);
+        },Date.valueOf(tomorrow),dayInMilliseconds);
 
     }
 
