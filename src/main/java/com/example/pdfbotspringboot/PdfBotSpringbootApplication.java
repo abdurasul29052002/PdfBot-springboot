@@ -26,7 +26,7 @@ public class PdfBotSpringbootApplication {
     public static final String pdfFolder = "/home/ubuntu/assets/pdf";
     public static final String compressFolder = "/home/ubuntu/assets/compress";
     public static Pair<String, File> declareMessage = null;
-    public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot/");
+    public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot");
     public static Map<Long, String> admins = new HashMap<>(
             Map.of(1324394249L, "ADMIN",
                     968877318L, "ADMIN")
