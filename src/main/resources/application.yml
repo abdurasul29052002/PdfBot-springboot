@@ -1,11 +1,11 @@
 bot:
-  token: 5742413451:AAFpk66EOBf3Oit6x4Wf1Qfx7U7oBwURFvA
-  name: '@oauthgooglebot'
+  token: 5039461659:AAFe3YLo6bbGQntb6VtZukV7QJU9XuyvnNk
+  name: pdfdocsbot
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pdfbot
     username: postgres
-    password: husanboy2002
+    password: 12345
   jpa:
     hibernate:
       ddl-auto: update
