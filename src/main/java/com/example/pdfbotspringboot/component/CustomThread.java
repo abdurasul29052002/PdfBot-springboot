@@ -72,6 +72,12 @@ public class CustomThread extends Thread {
             try {
                 Thread.sleep(100);
             } catch (Exception e) {
+                SendMessage sendMessage = new SendMessage();
+                for (Long chatId : admins.keySet()) {
+                    sendMessage.setText("Problem happened while sending " + e.getMessage());
+                    sendMessage.setChatId(chatId);
+                    sender.sendMessage(sendMessage);
+                }
                 System.out.println("Too many request exception");
             }
         }
@@ -97,6 +103,12 @@ public class CustomThread extends Thread {
             try {
                 Thread.sleep(100);
             } catch (Exception e) {
+                SendMessage sendMessage = new SendMessage();
+                for (Long chatId : admins.keySet()) {
+                    sendMessage.setText("Problem happened while sending " + e.getMessage());
+                    sendMessage.setChatId(chatId);
+                    sender.sendMessage(sendMessage);
+                }
                 System.out.println("Too many request exception");
             }
         }
