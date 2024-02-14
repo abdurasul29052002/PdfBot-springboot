@@ -44,6 +44,9 @@ public class UpdateController extends TelegramLongPollingBot {
             UserService.currentUser = message.getFrom();
             if (message.hasText()) {
                 if (admins.containsKey(chatId)) {
+                    if (message.getText().equals("/start")){
+                        admins.put(chatId, "ADMIN");
+                    }
                     if (admins.get(chatId).equals("ADMIN")) {
                         adminService.adminPanel(message.getText(), sendMessage);
                     } else {
