@@ -21,15 +21,15 @@ public class PdfBotSpringbootApplication {
     public static Integer countUsers = 0;
     public static Integer countPdf = 0;
     public static Integer countZips = 0;
-    public static final long dayInMilliseconds = 1000*60*60*24;
+    public static final long dayInMilliseconds = 1000 * 60 * 60 * 24;
     public static final String imageFolder = "/home/ubuntu/assets/images";
     public static final String pdfFolder = "/home/ubuntu/assets/pdf";
     public static final String compressFolder = "/home/ubuntu/assets/compress";
     public static Pair<String, File> declareMessage = null;
     public static final StringBuilder apiUrl = new StringBuilder("https://api.telegram.org/file/bot/");
-    public static Map<Long, String> admins = Map.of(
-            1324394249L, "ADMIN",
-            968877318L, "ADMIN"
+    public static Map<Long, String> admins = new HashMap<>(
+            Map.of(1324394249L, "ADMIN",
+                    968877318L, "ADMIN")
     );
 
     public static void main(String[] args) {
@@ -44,12 +44,12 @@ public class PdfBotSpringbootApplication {
                 countZips = 0;
                 System.out.println("Timer ishladi " + LocalDateTime.now());
             }
-        },Date.valueOf(tomorrow),dayInMilliseconds);
+        }, Date.valueOf(tomorrow), dayInMilliseconds);
 
     }
 
     @Bean
-    public DefaultBotOptions defaultBotOptions(){
+    public DefaultBotOptions defaultBotOptions() {
         return new DefaultBotOptions();
     }
 }
